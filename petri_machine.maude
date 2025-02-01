@@ -1,0 +1,8 @@
+mod PETRI-MACHINE is
+  sort Marking .
+  ops null $ c a q : -> Marking .
+  op _ _ : Marking Marking -> Marking [assoc comm id: null] .
+  rl [buy-c] : $ => c .
+  rl [buy-a] : $ => a q .
+  rl [chng] : q q q q => $ .
+endm

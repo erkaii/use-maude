@@ -1,0 +1,11 @@
+mod CANDY-AUTOMATON is
+  sort State .
+  ops $ ready broken nestle m&m q : -> State .
+  rl [in] : $ => ready .
+  rl [cancel] : ready => $ .
+  rl [1] : ready => nestle .
+  rl [2] : ready => m&m .
+  rl [fault] : ready => broken .
+  rl [chng] : nestle => q .
+  rl [chng] : m&m => q .
+endm
