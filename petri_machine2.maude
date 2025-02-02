@@ -1,13 +1,13 @@
 mod PETRI-MACHINE-2 is
   sort Marking .
-  ops null $ dc qc q MM Orreo Coke: -> Marking .
+  ops null $ $c qc q m&m orreo coke : -> Marking .
   op _ _ : Marking Marking -> Marking [assoc comm id: null] .
-  rl [buy-1] : dc dc => MM qc qc qc .
-  rl [buy-2] : dc dc dc => qc qc qc Orreo .
-  rl [buy-3] : dc dc dc => qc qc Coke .
-  rl [chng] : qc qc qc qc => dc .
-  rl [dtoc] : $ => dc .
-  rl [ctod] : dc => $ .
+  rl [buy1] : $c $c => m&m qc qc qc .
+  rl [buy2] : $c $c $c => qc qc qc orreo .
+  rl [buy3] : $c $c $c => qc qc coke .
+  rl [chng] : qc qc qc qc => $c .
+  rl [$toc] : $ => $c .
+  rl [cto$] : $c => $ .
   rl [qtoc] : q => qc .
   rl [ctoq] : qc => q .
 endm
