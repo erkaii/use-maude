@@ -1,7 +1,0 @@
-mod ACTOR is
-  subsorts Object Msg < Configuration .
-  op none : -> Configuration .
-  op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
-  op <_:_|_> : Oid Class Atts -> Object [ctor] . 
-  op _,_ : Atts Atts -> Atts [ctor assoc comm id: null] .
-endm

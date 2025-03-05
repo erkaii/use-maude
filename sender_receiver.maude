@@ -1,0 +1,40 @@
+mod SENDER_RECEIVER is
+  protecting NAT .
+  protecting LIST{Nat} .
+
+  sorts Oid Class Atts Object Msg Configuration Sender Receiver .
+
+  subsorts Object Msg < Configuration .
+  subsort Sender Receiver < Object .
+
+  op none : -> Configuration .
+  op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
+
+  op <_:_|_> : Oid Class Atts -> Object [ctor] .
+  op _,_ : Atts Atts -> Atts [ctor assoc comm id: "null"] .
+
+  op to_from_val_cnt_ : Oid Oid Nat Nat -> Msg [ctor] .
+  op to_from_ack_ : Oid Oid Nat -> Msg [ctor] .
+
+  vars N M : Nat . var L : List{Nat} . vars A B : Oid . var TV : Bool .
+
+  op <A : Sender | buff: L, rec: B, cnt: M, ack-w: TV> : -> Sender .
+  op <B : Receiver | buff: L, snd: A, cnt: M> : -> Receiver .
+
+  rl [snd] :
+    < A : Sender | buff: (N ; L), rec: B, cnt: M, ack-w: false >
+    => (to B from A val N cnt M)
+       < A : Sender | buff: L, rec: B, cnt: M, ack-w: true > .
+
+  rl [rec] :
+    (to B from A val N cnt M)
+    < B : Receiver | buff: L, snd: A, cnt: M >
+    => < B : Receiver | buff: (L ; N), snd: A, cnt: s(M) >
+       (to A from B ack M) .
+
+  rl [ack-rec] :
+    (to A from B ack M)
+    < A : Sender | buff: L, rec: B, cnt: M, ack-w: true >
+    => < A : Sender | buff: L, rec: B, cnt: s(M), ack-w: false > .
+endm
+ 
