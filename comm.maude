@@ -1,0 +1,52 @@
+
+*** Simple communication protocol example.
+
+fmod NAT-LIST is
+ protecting NAT .
+ sort List .
+ subsorts Nat < List .
+ op nil : -> List .
+ op _;_ : List List -> List [assoc id: nil] .
+ endfm
+
+omod COMM is protecting NAT-LIST .
+ protecting  QID .
+ subsort Qid < Oid .
+ class Sender |  buff : List, rec : Oid, cnt : Nat, ack-w : Bool .
+ class Receiver |  buff : List, snd : Oid, cnt : Nat .
+ msg to_from_val_cnt_ : Oid Oid Nat Nat -> Msg .
+ msg to_from_ack_ : Oid Oid Nat -> Msg . 
+
+ vars N M : Nat . vars L Q : List .  vars A B : Oid .  var TV : Bool .
+ 
+ rl [snd] : < A : Sender | buff : (N ; L), rec : B, cnt : M, ack-w : false > => 
+ (to B from A val N cnt M) < A : Sender | buff : L, cnt : M, ack-w : true  > .
+ 
+ rl [rec] : < B : Receiver | buff : L, snd : A, cnt : M > 
+ (to B from A val N cnt M) => (to A from B ack M)
+ < B : Receiver | buff : (L ; N),  snd : A, cnt : s(M) > .
+
+rl [ack-rec] : (to A from B ack M)
+               < A : Sender | buff : L, rec : B, cnt : M, ack-w : true >
+=> < A : Sender | buff : L, rec : B, cnt : s(M), ack-w : false > .
+endom
+
+***(
+rew < 'a : Sender | buff : (1 ; 2 ; 3 ; 4 ; 5), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 > .
+
+set trace on .
+
+rew [3] < 'a : Sender | buff : (1 ; 2 ; 3 ; 4 ; 5), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 > .
+
+Maude> search < 'a : Sender | buff : (1 ; 2 ; 3), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 > =>! C:Configuration . 
+
+show path 3 .
+
+search < 'a : Sender | buff : (1 ; 2 ; 3), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 >  =>* < 'a : Sender | buff : L, rec : 'b, cnt : N, ack-w : TV > C:Configuration < 'b : Receiver | buff : Q, snd : 'a,cnt : M > such that N =/= M .
+
+search [1] < 'a : Sender | buff : (1 ; 2 ; 3), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 >  =>* < 'a : Sender | buff : L, rec : 'b, cnt : N, ack-w : TV > C:Configuration < 'b : Receiver | buff : Q, snd : 'a,cnt : M > such that N =/= M .
+
+search [1,1] < 'a : Sender | buff : (1 ; 2 ; 3), rec : 'b, cnt : 0, ack-w : false > < 'b : Receiver | buff : nil, snd : 'a, cnt : 0 >  =>* < 'a : Sender | buff : L, rec : 'b, cnt : N, ack-w : TV > C:Configuration < 'b : Receiver | buff : Q, snd : 'a,cnt : M > such that N =/= M .
+
+)
+
