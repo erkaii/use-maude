@@ -1,0 +1,16 @@
+mod CL is
+	sort CL .
+	ops S K I : -> CL . *** basic combinators 
+	ops B C W M B' J : -> CL . *** Well-known combinators
+	op _ _ : CL CL -> CL . ***application
+	vars x y z v : CL .
+  	rl [K.red] : (K x) y => x .
+  	rl [S.red] : ((S x) y) z => (x z) (y z) .
+  	rl [I.red] : I x => x .
+  	rl [B.red] : ((B x) y) z => (x (y z)) .
+  	rl [C.red] : ((C x) y) z => (x (z y)) .
+  	rl [W.red] : (W x) y => ((x y) y).
+  	rl [M.red] : M x => (x x) .
+  	rl [B'.red] : ((B' x) y) z => (y (x z)) .
+  	rl [J.red] : (((J x) y) z) v => (x y) ((x v) z) .
+endm
