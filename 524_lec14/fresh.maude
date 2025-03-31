@@ -1,0 +1,14 @@
+fmod FRESH{N :: NAME} is
+	protecting SET{N} . protecting BOOL .
+	op next : N$Name -> N$Name .
+	op _>_ : N$Name N$Name -> Bool .
+	op max : NeSet{N} -> N$Name .
+	op fresh : NeSet{N} -> N$Name .
+	vars S U : Set{N} . var Q : NeSet{N} . vars X Y : N$Name .
+
+	eq next(X) = j(s i(X)) .
+	eq X > Y = i(X) > i(Y) .
+	eq max(X) = X .
+	eq max(X,Y,S) = if X > Y then max(X,S) else max(Y,S) fi .
+	eq fresh(Q) = next(max(Q)) .
+endfm
