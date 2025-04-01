@@ -154,3 +154,36 @@ result Lambda0{NatName}: \ x{0} . (x{0} (\ x{1} . (x{1} x{1})))
 ```
 
 It's worth noticing that in the first example, due to the occurrence of the free name *x\{2\}*, the lambda-term is not a combinator, hence no alpha-canonical form was generated.
+
+Define two lambda-terms *u, v* to be lambda-equal iff they are equal under alpha-equivalence and beta-rule. 
+
+Define two lambda-terms *u, v* to be beta-joinable iff *u, v* shares the same termination under lambda rewrite theory.
+
+Lambda-equality is equivalent with beta-joinability due to Church-Rosser Theorem. 
+
+Whether two lambda-terms *u, v* are lambda-equal or not is a semi-decidable question. If lambda-equality happens to **hold** for *u, v*, then the lambda-equality question can be answered in finite time with true. 
+
+Use search command in **ALPHA-CAN-NAT-NAME** to decide whether two lambda-terms are lambda-equal.
+
+```
+Maude> search [1] alpha-eq((\ x{7} . (x{7} (\ x{7} . (x{7} x{7})))), (\ x{9}. x{9}) (\ x{0} . (x{0} (\ x{1} . (x{1} x{1}))))) =>+ tt .
+search [1] in ALPHA-CAN-NAT-NAME : alpha-eq(\ x{7} . (x{7} (\ x{7} . (
+    x{7} x{7}))), (\ x{9} . x{9}) (\ x{0} . (x{0} (\ x{1} . (x{1} x{
+    1}))))) =>+ tt .
+
+Solution 1 (state 2)
+states: 3  rewrites: 392 in 0ms cpu (0ms real) (~ rewrites/second)
+empty substitution
+```
+
+```
+Maude> search [1] alpha-eq((\ x{0}. x{0}) (\ x{7} . (x{7} (\ x{3} . (x{3} x{7})))), (\ x{9}. x{9}) (\ x{0} . (x{0} (\ x{1} . (x{1} x{1}))))) =>+ tt .
+search [1] in ALPHA-CAN-NAT-NAME : alpha-eq((\ x{0} . x{0}) (\ x{7} . (
+    x{7} (\ x{3} . (x{3} x{7})))), (\ x{9} . x{9}) (\ x{0} . (x{0} (\
+    x{1} . (x{1} x{1}))))) =>+ tt .
+
+No solution.
+states: 4  rewrites: 808 in 0ms cpu (0ms real) (~ rewrites/second)
+```
+
+
