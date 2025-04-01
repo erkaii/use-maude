@@ -1,0 +1,26 @@
+mod LAMBDA-DB is protecting NAT .
+	sorts LambdaDB Sub .
+	subsort Nat < LambdaDB .
+
+	op \._ : LambdaDB -> LambdaDB [ctor] . *** lambda abstraction
+	op __ : LambdaDB LambdaDB -> LambdaDB [ctor gather (E e)] . *** application
+	op [_] : LambdaDB -> Sub [ctor frozen] . *** Substitution
+	op [^] : -> Sub [ctor] . *** shift up
+	op [^_] : Sub -> Sub [ctor frozen] . *** lift
+	op __ : Sub LambdaDB -> LambdaDB [frozen] . *** instantiation
+
+	vars M N : LambdaDB . var n : Nat . var SU : Sub .
+
+	eq [1] : [M] (0) = M .   	*** instantiation on 0
+	eq [2] : [M] (s(n)) = n .   *** instantiation on non-zero
+	eq [3] : [^] n = s(n) .     *** shifting up to adjust
+								*** for enclosing \.’s
+
+	eq [4] : [^ SU] 0 = 0 .     *** lifted Sub on bound variable
+	eq [5] : [^ SU] s(n) = [^] (SU n) .   *** shifting (later) and lifting a
+								*** variable s(n) under a lambda
+	eq [6] : SU (M N) = (SU M) (SU N) .
+	eq [7] : SU (\. M) = \. ([^ SU] M) . *** lifting SU over a \.
+
+	rl [beta] : (\. M) N => [N] M .
+endm

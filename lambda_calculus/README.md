@@ -196,3 +196,10 @@ states: 4  rewrites: 30 in 0ms cpu (0ms real) (~ rewrites/second)
 ```
 
 In practice, it is a good idea to do search in the form of ```search [1, b] alpha-eq(u, v) => + tt .```, where ```b``` is the bound of depth for the search.
+# Bonus
+Lambda-calculus can be written in de Bruijn notation, a module **Lambda-DB** providing rewrite theory for lambda-calculus in de Bruijn notation is given by,
+
+```
+maude lambda_db.maude
+```
+
