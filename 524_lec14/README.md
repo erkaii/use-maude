@@ -57,3 +57,27 @@ Load **LAMBDA-FRESH** module which gives an executable version of lambda-calculu
 ```
 load lambda_fresh.maude
 ```
+
+**LAMBDA-FRESH** is parametric on the choice of a data type of names. 
+
+Load **NAT-NAME** functional module to get a natural data type *x1, x2, ...*
+
+```
+load nat_name.maude
+```
+
+Instantiate **LAMBDA-NAT-NAME** by first viewing **NatName**.
+
+```
+load view.maude
+load lambda_nat_name.maude
+```
+
+Now test the **LAMBDA-NAT-NAME** and see how it handles the confusion case naturally.
+
+```
+Maude> rew (\ x{1} . \ x{2} . (x{2} x{1})) x{2} .
+rewrite in LAMBDA-NAT-NAME : (\ x{1} . \ x{2} . (x{2} x{1})) x{2} .
+rewrites: 56 in 0ms cpu (0ms real) (746666 rewrites/second)
+result Lambda{NatName}: \ x{3} . (x{3} x{2})
+```
