@@ -1,3 +1,0 @@
-view NatName from NAME to NAT-NAME is
-	op j to x{_} .
-endv
