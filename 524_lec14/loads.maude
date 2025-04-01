@@ -1,0 +1,9 @@
+load name.maude
+load set_name.maude
+load lambda.maude
+load fresh.maude
+load lambda_fresh.maude
+load nat_name.maude
+load view.maude
+load lambda_nat_name.maude
+load fun_defs.maude

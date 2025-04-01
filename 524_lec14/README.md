@@ -1,7 +1,16 @@
-# Explanation
+# What is This?
 This folder contains Maude code from CS 524 lecture 14.
 
-# Usage
+Combining them gives a Maude module for executbale lambda-calculus called **FUN-DEFS** which contains basic functions and constants. 
+
+# How to Use?
+To load the **FUN-DEFS** module in one go, run
+
+```
+maude loads.maude
+```
+
+# Usage Step by Step
 Start by launching maude.
 
 ```
@@ -58,7 +67,7 @@ Load **LAMBDA-FRESH** module which gives an executable version of lambda-calculu
 load lambda_fresh.maude
 ```
 
-**LAMBDA-FRESH** is parametric on the choice of a data type of names. 
+However, testing **LAMBDA-FRESH** with the same input doesn't give better result than **LAMBDA** module. This is because **LAMBDA-FRESH** is parametric on the choice of a data type of names, it doesn't know how to get a **fresh()** variable unless a data type is defined for **FRESH**.
 
 Load **NAT-NAME** functional module to get a natural data type *x1, x2, ...*
 
@@ -81,3 +90,14 @@ rewrite in LAMBDA-NAT-NAME : (\ x{1} . \ x{2} . (x{2} x{1})) x{2} .
 rewrites: 56 in 0ms cpu (0ms real) (746666 rewrites/second)
 result Lambda{NatName}: \ x{3} . (x{3} x{2})
 ```
+
+After defining lambda-calculus, some basic functions and constants can be defined (functions are just lambda-terms without free variables).
+
+Load **FUN-DEFS** module to have a definition of basic functions and constants in lambda-calculus.
+
+```
+load fun_defs.maude
+```
+
+
+
