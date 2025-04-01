@@ -186,4 +186,13 @@ No solution.
 states: 4  rewrites: 808 in 0ms cpu (0ms real) (~ rewrites/second)
 ```
 
+```
+Maude> search [1] alpha-eq(((\ x{0} . x{1}) x{0}), ((\ x{2} . x{1}) x{2})) =>+ tt .
+search [1] in ALPHA-CAN-NAT-NAME : alpha-eq((\ x{0} . x{1}) x{0}, (\ x{
+    2} . x{1}) x{2}) =>+ tt .
 
+No solution.
+states: 4  rewrites: 30 in 0ms cpu (0ms real) (~ rewrites/second)
+```
+
+In practice, it is a good idea to do search in the form of ```search [1, b] alpha-eq(u, v) => + tt .```, where ```b``` is the bound of depth for the search.
