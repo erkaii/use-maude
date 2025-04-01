@@ -1,0 +1,33 @@
+mod FUN-DEFS is
+	protecting LAMBDA-NAT-NAME .
+
+	*** names for function composition (f,g) |-> f ; g
+	*** and for the squaring function h |-> h ; h
+
+	ops comp square : -> Lambda{NatName} .
+
+	eq comp = \ x{1} . \ x{2} . \ x{0} .(x{2} (x{1} x{0})) .
+	eq square = \ x{0} .((comp x{0}) x{0}) .
+
+	*** I, K, S, zero, true, false, if-then-else, Pairing,
+	*** 1st and 2nd projections, successor, predecessor,
+	*** zero predicate and Turing’s fixpoint combinator Yt,
+
+	ops I K S zero tt ff if P p1 p2 suc pred zero? Yt : -> Lambda{NatName} .
+
+	eq I = \ x{0} . x{0} .
+	eq K = (\ x{0} . \ x{1} . x{0}) .
+	eq S = (\ x{0} . \ x{1} . \ x{2} . ((x{0} x{2}) (x{1} x{2}))) .
+	eq zero = \ x{0} . x{0} .
+	eq tt = \ x{0} . \ x{1} . x{0} .
+	eq ff = \ x{0} . \ x{1} . x{1} .
+	eq if = \ x{0} . \ x{1} . \ x{2} . (x{0} x{1} x{2}) .
+	eq P = \ x{1} . \ x{2} . \ x{0} . ((x{0} x{1}) x{2}) .
+	eq p1 = \ x{0} .(x{0} tt) .
+	eq p2 = \ x{0} .(x{0} ff) .
+	eq suc = \ x{0} . ((P ff) x{0}) .
+	eq pred = \ x{0} . (x{0} ff) .
+	eq zero? = \ x{0} .(x{0} tt) .
+	eq Yt = (\ x{0} . (\ x{1} . (x{1} ((x{0} x{0}) x{1}))))
+		(\ x{0} . (\ x{1} . (x{1} ((x{0} x{0}) x{1})))) .
+endm

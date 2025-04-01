@@ -1,0 +1,10 @@
+mod LAMBDA-FRESH0{N :: NAME} is protecting LAMBDA-FRESH{N} .
+	sort Lambda0{N} . *** combinators
+	subsort Lambda0{N} < Lambda{N} .
+	op \_._ : N$Name Lambda0{N} -> Lambda0{N} [ctor] .
+	op __ : Lambda0{N} Lambda0{N} -> Lambda0{N} [ctor gather (E e)] .
+
+	vars X Y Z : N$Name . vars U V W : Lambda{N} .
+
+	cmb (\ X . U) : Lambda0{N} if fn(U) \ X = mt .
+endm

@@ -1,0 +1,3 @@
+mod LAMBDA-NAT-NAME0 is
+	protecting LAMBDA-FRESH0{NatName} .
+endm

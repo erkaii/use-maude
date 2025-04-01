@@ -1,0 +1,3 @@
+mod ALPHA-CAN-NAT-NAME is
+	protecting ALPHA-CAN{NatName} . 
+endm

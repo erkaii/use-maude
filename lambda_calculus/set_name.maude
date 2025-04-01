@@ -1,0 +1,21 @@
+fmod SET{N :: NAME} is
+	sorts Set{N} NeSet{N} . subsorts N$Name < NeSet{N} < Set{N} .
+	op mt : -> Set{N} . *** empty set
+	op _,_ : Set{N} Set{N} -> Set{N} [assoc comm id: mt] . *** set union
+	op _,_ : NeSet{N} NeSet{N} -> NeSet{N} [assoc comm id: mt] . *** set union
+	op _\_ : Set{N} Set{N} -> Set{N} . *** set difference
+	op _in_ : N$Name Set{N} -> Bool . *** set membership
+
+	vars S U : Set{N} . vars X Y : N$Name . vars P Q : NeSet{N} .
+
+	eq X,X = X . *** idempotency
+
+	eq mt \ S = mt .
+	eq S \ mt = S .
+	eq Y \ X = if Y .=. X then mt else Y fi .
+	eq (Y,Q) \ X = if Y .=. X then (Q \ X) else (Y,(Q \ X)) fi .
+	eq S \ X,Q = (S \ X)\ Q .
+
+	eq X in mt = false .
+	eq X in (Y,S) = X .=. Y or X in S .
+endfm
