@@ -19,4 +19,28 @@ Load the **SET\{N :: NAME\}** functional module, it defines how sets of names be
 ```
 load set_name.maude
 ```
- 
+
+Load the **LAMBDA** module. This is a parameterized rewrite theory formalizing the lambda-calculus.
+
+```
+load lambda.maude
+```
+
+Play with lambda-calculus like the following example. Note the limitation here is the variables available are limited to just X, Y, Z, U, V, W.
+
+```
+Maude> rew (\ X . (X Y)) V . 
+rewrite in LAMBDA : (\ X . (X Y)) V .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result Lambda{N}: V if X .=. Y then V else Y fi
+```
+
+One thing worth notice is that the **LAMBDA** module defined here doesn't automatically perform alpha rule to avoid free names causing confusion, an example is given as:
+
+```
+Maude> rew (\ X . \ Y . (Y X)) Y .
+rewrite in LAMBDA : (\ X . \ Y . (Y X)) Y .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Lambda{N}: [X := Y] \ Y . (Y X)
+```
+
