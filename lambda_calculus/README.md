@@ -1,5 +1,5 @@
 # What is This?
-This folder contains Maude code related to lambda calculus from CS 524.
+This folder contains Maude code related to lambda-calculus from CS 524.
 
 # How to Use?
 To load the **FUN-DEFS** module in one go, run
@@ -102,5 +102,55 @@ Load **FUN-DEFS** module to have a definition of basic functions and constants i
 load fun_defs.maude
 ```
 
+Lambda-terms without free names are called lambda-combinators, a module can be defined to represent lambda-combinator as a sub-class of lambda-terms.
+
+Load **LAMBDA-FRESH0** module to define parameterized fresh variables for lambda-combinators.
+```
+load lambda_fresh0.maude
+```
+
+Load **LAMBDA-NAT-NAME0** module to instantiate the module for lambda-combinators.
+
+```
+load lambda_nat_names0.maude
+```
+
+So far, the lambda-calculus is only executable in the sense that alpha-equivalence is disregarded. To include alpha-equivalence, consider defining a alpha-canonical term for all lambda-terms and decide alpha-equivalence by comparing two alpha-canonical terms. 
+
+Load **ALPHA-CAN** module to get a parameterized module for alpha-canonical form.
+
+```
+load alpha_can.maude
+```
+
+Load **ALPHA-CAN-NAT-NAME** module to instantiate a module for alpha-canonical form on natural numbers.
+
+```
+load alpha_can_nat_name.maude
+```
+
+Play with the module like the following examples.
 
 
+```
+Maude> red can (\ x{1} . (x{2} x{1})) .
+reduce in ALPHA-CAN-NAT-NAME : can(\ x{1} . (x{2} x{1})) .
+rewrites: 11 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Set{NatName},Lambda{NatName}]: can(\ x{1} . (x{2} x{1}))
+```
+```
+Maude> red can(\ x{7} . (x{7} (\ x{3} . (x{3} x{7})))) .
+reduce in ALPHA-CAN-NAT-NAME : can(\ x{7} . (x{7} (\ x{3} . (x{3} x{
+    7})))) .
+rewrites: 118 in 0ms cpu (0ms real) (~ rewrites/second)
+result Lambda0{NatName}: \ x{0} . (x{0} (\ x{1} . (x{1} x{0})))
+```
+```
+Maude> red can(\ x{7} . (x{7} (\ x{7} . (x{7} x{7})))) .
+reduce in ALPHA-CAN-NAT-NAME : can(\ x{7} . (x{7} (\ x{7} . (x{7} x{
+    7})))) .
+rewrites: 104 in 1ms cpu (0ms real) (104000 rewrites/second)
+result Lambda0{NatName}: \ x{0} . (x{0} (\ x{1} . (x{1} x{1})))
+```
+
+It's worth noticing that in the first example, due to the occurrence of the free name *x\{2\}*, the lambda-term is not a combinator, hence no alpha-canonical form was generated.
