@@ -1,0 +1,22 @@
+mod QLOCK is protecting NAT .
+ sorts NatMSet NatList State .
+ subsorts Nat < NatMSet NatList .
+ op mt : -> NatMSet [ctor] .
+ op _ _ : NatMSet NatMSet -> NatMSet [ctor assoc comm id: mt] .
+ op nil : -> NatList [ctor] .
+ op _;_ : NatList NatList -> NatList [ctor assoc id: nil] .
+ op {_<_|_|_|_>} : NatMSet NatMSet NatMSet NatMSet NatList -> State [ctor] .
+ op [_] : Nat -> NatMSet .  *** set of first n numbers
+ op init : Nat -> State .   *** initial state, parametric on n
+
+ vars n i j : Nat . vars S U W C : NatMSet . var Q : NatList . 
+ eq [0] = mt .
+ eq [s(n)] = n [n] .
+ eq init(n) = {[n] < mt | mt | mt | nil >} .
+
+ rl [join] : {S i < U | W | C | Q >} => {S < U i | W | C | Q >} .
+ rl [n2w] : {S < U i | W | C | Q >} => {S < U | W i | C | Q ; i >} .
+ rl [w2c] : {S < U | W i | C | i ; Q >} => {S < U | W | C i | i ; Q >} .
+ rl [c2n] : {S < U | W | C i | i ; Q >} => {S < U i | W | C | Q >} .
+ rl [exit] : {S < U i | W | C | Q >} => {S i < U | W | C | Q >} .
+endm
