@@ -5,7 +5,7 @@ This directory contains examples of using maude to perform system property check
 Note that the examples in different subsections are **independent** from each other.
 
 ## Explicit State Model Checking
-Launch maude with the module loaded
+An example of QLOCK protocol is implemented as a maude module. Launch maude with the module loaded
 
 ```
 maude qlock.maude
@@ -32,7 +32,7 @@ states: 74272  rewrites: 295241 in 192ms cpu (196ms real) (1531388 rewrites/seco
 ```
 
 ## Symbolic Model Checking Using Narrowing
-Launch maude with the module loaded
+An example of Lamport's Bakery protocol is implemented as a maude module. Launch maude with the module loaded
 
 ```
 maude Lamport_Bakery.maude
