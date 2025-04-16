@@ -43,6 +43,7 @@ mod DEKKER is
 	      ’c2 := 0 ;
 	      rem2
 	  forever .
+
 	eq initialMem = [’c1, 0] [’c2, 0] [’turn, 1] . 
 	eq initial = { [1, p1] | [2, p2], initialMem} . 
 endm

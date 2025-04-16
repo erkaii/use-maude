@@ -12,7 +12,9 @@ fmod MEMORY is
 	op [_,_] : Qid Int -> Memory .
 	op _in_ : Qid Memory -> Bool? . *** cell allocated for Q? 
 
-	var Q : Qid . var M : Memory . var N : Int . 
+	var Q : Qid . 
+	var M : Memory . 
+	var N : Int . 
 
 	eq Q in [Q,N] M = true .
 endfm
@@ -24,7 +26,7 @@ fmod TESTS is
 	sort Test .
 	op _=_ : Qid Int -> Test .
 	op _>’_ : Qid Int -> Test .
-	op  _&_ : Test Test -> Test [assoc] .
+	op _&_ : Test Test -> Test [assoc] .
 	op eval : Test Memory -> Bool .
 	var Q : Qid .
 	var N N’ K : Int .
