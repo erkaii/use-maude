@@ -25,40 +25,40 @@ fmod TESTS is
 
 	sort Test .
 	op _=_ : Qid Int -> Test .
-	op _>’_ : Qid Int -> Test .
+	op _>'_ : Qid Int -> Test .
 	op _&_ : Test Test -> Test [assoc] .
 	op eval : Test Memory -> Bool .
 	var Q : Qid .
-	var N N’ K : Int .
+	var N N' K : Int .
 	var M : Memory .
-	vars T T’ : Test .
+	vars T T' : Test .
 
-	eq eval(Q = N, [Q, N’] M) = N == N’ .
+	eq eval(Q = N, [Q, N'] M) = N == N' .
 	ceq eval(Q = N, M) = N == 0 if Q in M =/= true .
-	eq eval(Q >’ N, [Q, K] M) = K > N .
-	ceq eval(Q >’ N, M) = 0 > N if Q in M =/= true . 
-	eq eval(T & T’,M) = eval(T,M) and eval(T’,M) .
+	eq eval(Q >' N, [Q, K] M) = K > N .
+	ceq eval(Q >' N, M) = 0 > N if Q in M =/= true . 
+	eq eval(T & T',M) = eval(T,M) and eval(T',M) .
 endfm
 
-***(Syntax for arithmetic expressions, and their evaluation semantics. To avoid evaluation of expressions by themselves, the operators + and * are specified as constructors with syntax +’ and *’ )
+***(Syntax for arithmetic expressions, and their evaluation semantics. To avoid evaluation of expressions by themselves, the operators + and * are specified as constructors with syntax +' and *' )
 fmod EXPRESSION is
 	inc MEMORY . 
 	sort Expression . 
 	subsorts Qid Int < Expression . 
-	op _+’_ : Expression Expression -> Expression [ctor] . 
-	op _*’_ : Expression Expression -> Expression [ctor] . 
-	op _-’_ : Expression Expression -> Expression [ctor] . 
+	op _+'_ : Expression Expression -> Expression [ctor] . 
+	op _*'_ : Expression Expression -> Expression [ctor] . 
+	op _-'_ : Expression Expression -> Expression [ctor] . 
 	op eval : Expression Memory -> Int .
 
-	var Q : Qid . var M : Memory . vars N N’ : Int . vars E E’ : Expression .
+	var Q : Qid . var M : Memory . vars N N' : Int . vars E E' : Expression .
 
 	eq eval(N, M) = N .
 	eq eval(Q, [Q, N] M) = N .
 	ceq eval(Q,M) = 0 if Q in M =/= true . 
 
-	eq eval(E +’ E’, M) = eval(E, M) + eval(E’, M) .
-	eq eval(E *’ E’, M) = eval(E, M) * eval(E’, M) . 
-	eq eval(E -’ E’, M) = eval(E, M) - eval(E’, M) .
+	eq eval(E +' E', M) = eval(E, M) + eval(E', M) .
+	eq eval(E *' E', M) = eval(E, M) * eval(E', M) . 
+	eq eval(E -' E', M) = eval(E, M) - eval(E', M) .
 endfm
 
 ***(Syntax for a trival sequential programming language. We allow abstracting out program fragments as elements of sorts LoopingUserStatement and UserStatement. LoopingUserStatements abstract out potentially nonterminating program fragments. UserStatements which are not LoopingUserStatements abstract out terminating program fragments. )
