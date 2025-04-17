@@ -83,7 +83,7 @@ A simple readers-writers system is specified by the **R&W** module, which can be
 maude rw.maude
 ```
 
-The definition of the rewrite module can be visualized as the following (suppose < 0, 0 > is the initial state).
+The definition of the rewrite module can be visualized as the following (suppose ```< 0, 0 >``` is the initial state).
 
 ```
 
@@ -132,5 +132,40 @@ No solution.
 states: 1000003  rewrites: 2000002 in 745ms cpu (765ms real) (2684054 rewrites/second)  
 ```
 
+To overcome the limitation of bounded search (caused by the infinite states), one can make use of symbolic model checking. 
 
+Reopen maude with another module, which implements the same readers-writers protocol but with narrowing enabled. 
 
+```
+maude rw_narrow.maude
+```
+
+Search for violation of mutual exclusion.
+
+```
+Maude> {fold} vu-narrow < R,0 > =>* < s(N),s(M) > .
+{fold} vu-narrow in R&W : < R, 0 > =>* < s(N), s(M) > .
+
+No solution.
+rewrites: 4 in 0ms cpu (0ms real) (9324 rewrites/second)  
+```
+
+View the fixed point reached by narrowing.
+
+```
+Maude> show most general states .
+< #1:Nat, 0 > \/
+< 0, s(0) >    
+```
+
+One can also verify the general states reached are not intersecting with the mutual exclusion pattern by using the ```unify``` command.
+
+```
+Maude> unify < R,0 > =? < N,s(s(M)) > .
+Decision time: 0ms cpu (0ms real)
+No unifier.
+
+Maude> unify < 0, s(0) > =? < N,s(s(M)) > .
+Decision time: 0ms cpu (0ms real)
+No unifier.
+```
