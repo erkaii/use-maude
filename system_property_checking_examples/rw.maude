@@ -1,0 +1,11 @@
+mod R&W is
+    protecting NAT .
+    sort Config .
+    op <_,_> : Nat Nat -> Config [ctor] .  --- readers/writers
+	vars R W : Nat .
+
+    rl < 0, 0 > => < 0, s(0) > .
+    rl < R, s(W) > => < R, W > .
+    rl < R, 0 > => < s(R), 0 > .
+    rl < s(R), W > => < R, W > .
+endm
