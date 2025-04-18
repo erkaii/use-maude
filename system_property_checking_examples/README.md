@@ -134,13 +134,7 @@ states: 1000003  rewrites: 2000002 in 745ms cpu (765ms real) (2684054 rewrites/s
 
 To overcome the limitation of bounded search (caused by the infinite states), one can make use of symbolic model checking. 
 
-Reopen maude with another module, which implements the same readers-writers protocol but with narrowing enabled. 
-
-```
-maude rw_narrow.maude
-```
-
-Search for violation of mutual exclusion.
+Search with narrowing for violation of mutual exclusion.
 
 ```
 Maude> {fold} vu-narrow < R,0 > =>* < s(N),s(M) > .
