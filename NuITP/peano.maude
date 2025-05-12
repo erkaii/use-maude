@@ -1,0 +1,10 @@
+set include BOOL off .
+fmod PEANO+R is
+    sort Nat .
+    op 0 : -> Nat [ctor metadata "0"] .
+    op s : Nat -> Nat [ctor metadata "4"] .
+    op _+_ : Nat Nat -> Nat [metadata "8"] .
+    vars N M L : Nat .
+    eq N + 0 = N .
+    eq N + s(M) = s(N + M) .
+endfm
