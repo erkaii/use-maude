@@ -23,8 +23,7 @@ mod KANELLAKIS-SMOLKA is
   eq (s B1) diff B2 = if s in B2 then (B1 diff B2) else (s (B1 diff B2)) fi .
 
   --- Partition definition
-  op emptyPart : -> Partition [ctor] .
-  op _;_ : Partition Partition -> Partition [ctor assoc comm id: emptyPart] .
+  op _;_ : Partition Partition -> Partition [ctor assoc comm id: noneBlock] .
 
   --- Trans definition
   op _~>_ : State State -> Trans [ctor] .
@@ -68,17 +67,17 @@ mod KANELLAKIS-SMOLKA is
   
   --- Main algorithm
   op ReduceU : Partition Partition -> Partition .
-  eq ReduceU(emptyPart, P) = P .
+  eq ReduceU(noneBlock, P) = P .
   eq ReduceU((B ; U), P) = ReduceU(IncreaseU(U, P, computeSPrime(B)), IncreaseP(P, P, computeSPrime(B))) .
 
   op IncreaseU : Partition Partition Block -> Partition .
-  eq IncreaseU(U, emptyPart, S') = U .
+  eq IncreaseU(U, noneBlock, S') = U .
   eq IncreaseU(U, (B' ; P), S') = if B' inter S' =/= noneBlock 
     then IncreaseU((U ; (B' inter S') ; (B' diff S')), P, S') 
     else IncreaseU(U, P, S') fi .
   
   op IncreaseP : Partition Partition Block -> Partition .
-  eq IncreaseP(P, emptyPart, S') = P .
+  eq IncreaseP(P, noneBlock, S') = P .
   eq IncreaseP((B' ; P), (B' ; P'), S') = if B' inter S' =/= noneBlock
     then IncreaseP((P ; (B' inter S'); (B' diff S')), P', S')
 	else IncreaseP((B' ; P), P', S') fi .
