@@ -72,13 +72,13 @@ mod KANELLAKIS-SMOLKA is
 
   op IncreaseU : Partition Partition Block -> Partition .
   eq IncreaseU(U, noneBlock, S') = U .
-  eq IncreaseU(U, (B' ; P), S') = if B' inter S' =/= noneBlock 
+  eq IncreaseU(U, (B' ; P), S') = if B' inter S' =/= noneBlock and B' inter S' =/= B'
     then IncreaseU((U ; (B' inter S') ; (B' diff S')), P, S') 
     else IncreaseU(U, P, S') fi .
   
   op IncreaseP : Partition Partition Block -> Partition .
   eq IncreaseP(P, noneBlock, S') = P .
-  eq IncreaseP((B' ; P), (B' ; P'), S') = if B' inter S' =/= noneBlock
+  eq IncreaseP((B' ; P), (B' ; P'), S') = if B' inter S' =/= noneBlock and B' inter S' =/= B'
     then IncreaseP((P ; (B' inter S'); (B' diff S')), P', S')
 	else IncreaseP((B' ; P), P', S') fi .
 endm
