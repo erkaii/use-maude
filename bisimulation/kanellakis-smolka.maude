@@ -38,12 +38,12 @@ mod KANELLAKIS-SMOLKA is
 
   --- Initialization
   op transSet : -> TransSet .
-  eq transSet = (s1 ~> s2) (s2 ~> s3) (s3 ~> s1) (s4 ~> s1) .
+  eq transSet = (s1 ~> s2) (s2 ~> s3) (s3 ~> s1) .
   op S : -> Block .
   eq S = (s1 s2 s3 s4) .
 
   op pi0 : -> Partition .
-  eq pi0 = (s1 s2 s3) ; s4 .
+  eq pi0 = s1 s2 s3 s4 .
 
   --- Transition membership check: is there s ~> t with t in B
   op existsTransTo : State Block TransSet -> Bool .
