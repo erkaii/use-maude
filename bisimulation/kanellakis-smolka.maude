@@ -1,99 +1,86 @@
-mod KS is
-  sorts State Label Transition TransitionSet StateSet Partition PartitionSet .
+mod KANELLAKIS-SMOLKA is
+  sorts State Trans TransSet Block Partition .
 
+  subsort State < Block < Partition .
+  subsort Trans < TransSet .
+
+  --- State and Block definitions
   ops s1 s2 s3 s4 : -> State [ctor] .
-  ops a b : -> Label [ctor] .
+  op noneBlock : -> Block [ctor] .
+  op __ : Block Block -> Block [ctor assoc comm id: noneBlock] .
 
-  op _-[_]->_ : State Label State -> Transition [ctor] .
+  --- Define set operation for Block
+  op _in_ : State Block -> Bool .
+  eq s in (s B) = true .
+  eq s in B = false [owise] .
 
-  subsort State < StateSet .
-  subsort Partition < PartitionSet .
-  subsort Transition < TransitionSet .
+  op _inter_ : Block Block -> Block [assoc comm] .
+  eq noneBlock inter B = noneBlock .
+  eq (s B1) inter B2 = if s in B2 then (s (B1 inter B2)) else (B1 inter B2) fi .
 
-  var X Y : State .
-  var L : Label .
-  var TS : TransitionSet .
-  vars XS YS S1 S2 B : StateSet .
-  vars XT YT : Transition .
-  var YTS : TransitionSet .
-  var P : PartitionSet .
+  op _diff_ : Block Block -> Block .
+  eq noneBlock diff B = noneBlock .
+  eq (s B1) diff B2 = if s in B2 then (B1 diff B2) else (s (B1 diff B2)) fi .
 
-  op empty : -> StateSet [ctor] .
-  op __ : StateSet StateSet -> StateSet [assoc comm id: empty] .
+  --- Partition definition
+  op emptyPart : -> Partition [ctor] .
+  op _;_ : Partition Partition -> Partition [ctor assoc comm id: emptyPart] .
 
-  op {_} : StateSet -> Partition [ctor] .
+  --- Trans definition
+  op _~>_ : State State -> Trans [ctor] .
+  op noneTrans : -> TransSet [ctor] .
+  op __ : TransSet TransSet -> TransSet [ctor assoc comm id: noneTrans] .
 
-  op pEmpty : -> PartitionSet [ctor] .
-  op __ : PartitionSet PartitionSet -> PartitionSet [assoc comm id: pEmpty] .
+  vars s s' t t' : State .
+  vars B B1 B2 S' B' : Block .
+  var tr : Trans .
+  var TS : TransSet .
+  vars P P' U : Partition .
 
-  op transitions : -> TransitionSet [ctor] .
-  eq transitions =
-    (s1 -[a]-> s2) (s2 -[a]-> s3) (s3 -[b]-> s4) (s4 -[a]-> s1) .
+  --- Initialization
+  op transSet : -> TransSet .
+  eq transSet = (s1 ~> s2) (s2 ~> s3) (s3 ~> s1) (s4 ~> s1) .
+  op S : -> Block .
+  eq S = (s1 s2 s3 s4) .
 
-  op none : -> TransitionSet [ctor] .
-  op __ : TransitionSet TransitionSet -> TransitionSet [assoc comm id: none] .
+  op pi0 : -> Partition .
+  eq pi0 = S .
 
-  --- Check if state has transition via label to a state in a set
-  op hasTransTo : State Label StateSet -> Bool .
+  --- Transition membership check: is there s ~> t with t in B
+  op existsTransTo : State Block TransSet -> Bool .
+  eq existsTransTo(s, noneBlock, TS) = false .
+  eq existsTransTo(s, (s' B2), TS) = if isInTransSet((s ~> s'), TS) then true else existsTransTo(s, B2, TS) fi .
 
-  --- Matching transitions
-  eq hasTransTo(X, L, empty) = false .
-  eq hasTransTo(X, L, (Y YS)) =
-    if transition-in((X -[L]-> Y), transitions) then true else hasTransTo(X, L, YS) fi .
+  op isInTransSet : Trans TransSet -> Bool .
 
-  --- Check if a state is in a StateSet
-  op state-in : State StateSet -> Bool .
-  eq state-in(X, empty) = false .
-  eq state-in(X, (X Y)) = true .
-  eq state-in(X, (X YS)) = true .
-  eq state-in(X, (Y YS)) = state-in(X, YS) .
+  eq isInTransSet(s ~> t, noneTrans) = false .
+  eq isInTransSet(s ~> t, (s ~> t) TS) = true .
+  ceq isInTransSet(s ~> t, (s' ~> t') TS) = isInTransSet((s ~> t), TS) if s =/= s' or t =/= t' .
 
-  --- Check if a transition is in a TransitionSet
-  op transition-in : Transition TransitionSet -> Bool .
-  eq transition-in(XT, none) = false .
-  eq transition-in(XT, (XT YT)) = true .
-  eq transition-in(XT, (XT YTS)) = true .
-  eq transition-in(XT, (YT YTS)) = transition-in(XT, YTS) .
+  --- Compute S' := {s in S | ∃t in B. s → t}
+  op computeSPrime : Block -> Block .
+  eq computeSPrime(B) = computeSPrimeHelper(S, B) .
 
-  --- Split function: split one partition based on behavior to block B
-  op splitBlock : Partition StateSet Label -> PartitionSet .
-  var S : StateSet .
+  op computeSPrimeHelper : Block Block -> Block .
+  eq computeSPrimeHelper(noneBlock, B) = noneBlock .
+  eq computeSPrimeHelper(B, noneBlock) = noneBlock .
+  eq computeSPrimeHelper((s B1), B) = if existsTransTo(s, B, transSet) then s computeSPrimeHelper(B1, B) else computeSPrimeHelper(B1, B) fi .
+  
+  ---
+  op ReduceU : Partition Partition -> Partition .
+  eq ReduceU(emptyPart, P) = P .
+  eq ReduceU((B ; U), P) = ReduceU(IncreaseU(U, P, computeSPrime(B)), IncreaseP(P, P, computeSPrime(B))) .
 
-  eq splitBlock({S}, B, L) =
-    gather(S, B, L, empty, empty) .
-
-  --- Helper: gather states with / without transition to B via L
-  op gather : StateSet StateSet Label StateSet StateSet -> PartitionSet .
-  eq gather(empty, B, L, S1, S2) = 
-    if S1 =/= empty and S2 =/= empty then 
-      {S1} {S2} 
-    else if S1 =/= empty then 
-      {S1} 
-    else 
-      {S2} fi fi .
-
-  eq gather((X XS), B, L, S1, S2) =
-    if hasTransTo(X, L, B) 
-    then gather(XS, B, L, (X S1), S2)
-    else gather(XS, B, L, S1, (X S2)) fi .
-
-  --- Placeholder: check if partition is stable
-  --- (You should iterate over each block pair and check splittability)
-  op isStable : PartitionSet -> Bool .
-  eq isStable(P) = false .  --- For now, always refine
-
-  --- Refinement (hardcoded for now)
-  op refine : PartitionSet -> PartitionSet .
-  eq refine({allStates}) = 
-    splitBlock({allStates}, allStates, a) .
-
-  --- Initial allStates
-  op allStates : -> StateSet .
-  eq allStates = s1 s2 s3 s4 .
-
-  --- Entry point
-  op runKS : -> PartitionSet .
-  eq runKS = refine({allStates}) .
-
+  op IncreaseU : Partition Partition Block -> Partition .
+  eq IncreaseU(U, emptyPart, S') = U .
+  eq IncreaseU(U, (B' ; P), S') = if B' inter S' =/= noneBlock 
+    then IncreaseU((U ; (B' inter S') ; (B' diff S')), P, S') 
+    else IncreaseU(U, P, S') fi .
+  
+  op IncreaseP : Partition Partition Block -> Partition .
+  eq IncreaseP(P, emptyPart, S') = P .
+  eq IncreaseP((B' ; P), (B' ; P'), S') = if B' inter S' =/= noneBlock
+    then IncreaseP((P ; (B' inter S'); (B' diff S')), P', S')
+	else IncreaseP((B' ; P), P', S') fi .
 endm
 
